@@ -14,7 +14,7 @@ jobs:
       name: Development
     strategy:
       matrix:
-        python-version: [ 3.10 ]
+        python-version: [ 3.10.12 ]
 
     steps:
       - name: Check out code
@@ -32,7 +32,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test with pytest
         run: |
-          if [ -d tests ] || [ -d test ]; then FLASK_ENV=${{secrets.FLASK_ENV}} python -m pytest; fi
+          if [ -d tests ] || [ -d test ]; then python -m pytest; fi
   Test-Local:
     runs-on: ubuntu-latest
     environment:
@@ -40,7 +40,7 @@ jobs:
     needs: [ Build ]
     strategy:
       matrix:
-        python-version: [ 3.10 ]
+        python-version: [ 3.10.12 ]
 
     steps:
       - name: Check out code
@@ -58,7 +58,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test application
         run: |
-          python main.py &
+          python app.py &
           sleep 5
           curl http://127.0.0.1:5000/hello | grep "template api"
   DeployDev:
